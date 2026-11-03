@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Build output
+frontend/dist/
+backend/dist/
+coverage/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Local databases
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE local settings
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Temporary files
+*.tmp
+*.swp
