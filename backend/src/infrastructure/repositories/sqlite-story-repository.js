@@ -14,6 +14,23 @@ export class SqliteStoryRepository {
       )
       VALUES (?, ?, ?, ?, ?, ?, ?)
     `)
+    
+    this.updateStatement = database.prepare(`
+    UPDATE stories
+    SET
+        title = ?,
+        situation = ?,
+        task = ?,
+        action = ?,
+        result = ?,
+        tags = ?
+    WHERE id = ?
+    `)
+
+    this.deleteStatement = database.prepare(`
+    DELETE FROM stories
+    WHERE id = ?
+    `)
 
     this.findByIdStatement = database.prepare(`
       SELECT id, title, situation, task, action, result, tags
@@ -22,7 +39,7 @@ export class SqliteStoryRepository {
     `)
   }
 
-  async save(story) {
+    async save(story) {
     this.insertStatement.run(
       story.id,
       story.title,
@@ -34,7 +51,7 @@ export class SqliteStoryRepository {
     )
   }
 
-  async findById(id) {
+    async findById(id) {
     const row = this.findByIdStatement.get(id)
 
     if (!row) {
@@ -51,4 +68,25 @@ export class SqliteStoryRepository {
       tags: JSON.parse(row.tags),
     })
   }
+
+    async update(story) {
+    const { changes } = this.updateStatement.run(
+        story.title,
+        story.situation,
+        story.task,
+        story.action,
+        story.result,
+        JSON.stringify(story.tags),
+        story.id,
+    )
+
+    return changes > 0
+    }
+
+    async delete(id) {
+    const { changes } = this.deleteStatement.run(id)
+
+    return changes > 0
+    }
+
 }

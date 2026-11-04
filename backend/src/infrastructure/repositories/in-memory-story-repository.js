@@ -19,4 +19,20 @@ export class InMemoryStoryRepository
     {
         return this.stories.get(id);
     }
+
+    async update(story)
+    {
+        if (!this.stories.has(story.id))
+            {
+                return false
+            }
+
+        this.stories.set(story.id, story)
+        return true
+    }
+
+    async delete(id)
+    {
+        return this.stories.delete(id)
+    }
 }
