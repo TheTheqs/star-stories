@@ -1,13 +1,10 @@
-import {Router} from "express";
+import { Router } from "express";
 
-export function createStoryRoutes(controller)
-{
+export function createStoryRoutes(controller) {
     const router = Router();
 
-    router.post("/", async (req, res) =>
-    {
-        await controller.createStory(req, res);
-    });
+    router.post("/", (req, res) => controller.createStory(req, res));
+    router.get("/:id", (req, res) => controller.getStory(req, res)); 
 
     return router;
 }

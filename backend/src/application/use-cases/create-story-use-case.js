@@ -9,7 +9,7 @@ export class CreateStoryUseCase
     async execute(data)
     {
         const id = this.idGenerator.generateId();
-        const story = new Story({id, ...data});
+        const story = new Story({...data, id});
         await this.storyRepository.save(story);
         return story;
     }

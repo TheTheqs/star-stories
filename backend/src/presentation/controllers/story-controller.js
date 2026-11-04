@@ -1,8 +1,9 @@
 export class StoryController
 {
-    constructor(createStoryUseCase)
+    constructor(createStoryUseCase, getStoryUseCase)
     {
         this.createStoryUseCase = createStoryUseCase;
+        this.getStoryUseCase = getStoryUseCase;
     }
 
     async createStory(req, res)
@@ -21,8 +22,31 @@ export class StoryController
             }
             else
             {
+                console.error(error);
                 res.status(500).json({ error: "Internal server error" });
             }
         }
+    }
+
+    async getStory(req, res)
+    {
+        try
+        {
+            const storyId = req.params.id;
+            const story = await this.getStoryUseCase.execute(storyId);
+            res.status(200).json(story);
+        }
+        catch (error)
+        {
+            if (error instanceof NotFoundError)
+            {
+                res.status(404).json({ error: error.message });
+            }
+            else
+            {
+                console.error(error);
+                res.status(500).json({ error: "Internal server error" });
+            }
+        }   
     }
 }
