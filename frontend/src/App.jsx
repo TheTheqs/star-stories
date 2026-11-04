@@ -3,6 +3,7 @@ import { Link, Route, Routes } from 'react-router'
 import HomePage from './pages/home-page.jsx'
 import CreateStoryPage from './pages/create-story-page.jsx'
 import StoryPage from './pages/story-page.jsx'
+import EditStoryPage from './pages/edit-story-page.jsx'
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/stories/new" element={<CreateStoryPage />} />
           <Route path="/stories/:id" element={<StoryPage />} />
+          <Route path="/stories/:id/edit" element={<EditStoryPage />} />
 
           <Route
             path="*"

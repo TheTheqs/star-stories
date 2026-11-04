@@ -1,71 +1,47 @@
-import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router'
+import { useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router'
 
-import { ApiError, getStory } from '../api/stories.js'
+import { deleteStory } from '../api/stories.js'
+import { useStory } from '../hooks/use-story.js'
 
 export default function StoryPage() {
   const { id } = useParams()
+  const navigate = useNavigate()
 
-  const [query, setQuery] = useState({
-    id: null,
-    status: 'loading',
-    story: null,
-    error: '',
-  })
+  const query = useStory(id)
 
-  useEffect(() => {
-    const controller = new AbortController()
+  const [isDeleting, setIsDeleting] = useState(false)
 
-    async function loadStory() {
-      setQuery({
-        id,
-        status: 'loading',
-        story: null,
-        error: '',
-      })
+  async function handleDelete() {
+    if (isDeleting) return
 
-      try {
-        const story = await getStory(id, {
-          signal: controller.signal,
-        })
+    const confirmed = window.confirm(
+      'Deseja excluir esta história? Essa ação não pode ser desfeita.',
+    )
 
-        if (controller.signal.aborted) return
+    if (!confirmed) return
 
-        setQuery({
-          id,
-          status: 'success',
-          story,
-          error: '',
-        })
-      } catch (error) {
-        if (controller.signal.aborted) return
+    setIsDeleting(true)
 
-        const notFound =
-          error instanceof ApiError && error.status === 404
+    try {
+      await deleteStory(id)
 
-        setQuery({
-          id,
-          status: notFound ? 'not-found' : 'error',
-          story: null,
-          error: notFound
-            ? 'Não encontramos uma história com esse ID.'
-            : 'Não foi possível carregar a história. Tente novamente mais tarde.',
-        })
-      }
+      window.alert('História excluída com sucesso.')
+      navigate('/', { replace: true })
+    } catch (error) {
+      window.alert(
+        error instanceof TypeError
+          ? 'Não foi possível conectar ao servidor.'
+          : error.message || 'Não foi possível excluir a história.',
+      )
+    } finally {
+      setIsDeleting(false)
     }
-
-    loadStory()
-
-    return () => {
-      controller.abort()
-    }
-  }, [id])
-
-  const isLoading = query.id !== id || query.status === 'loading'
+  }
 
   return (
     <section>
-      {isLoading ? (
+      {query.isLoading ? (
         <>
           <h1>História</h1>
           <p role="status">Carregando história...</p>
@@ -77,6 +53,23 @@ export default function StoryPage() {
           <p>
             <strong>ID:</strong> <code>{query.story.id}</code>
           </p>
+
+          <div className="story-actions" aria-busy={isDeleting}>
+            {!isDeleting && (
+              <Link to={`/stories/${encodeURIComponent(id)}/edit`}>
+                Editar história
+              </Link>
+            )}
+
+            <button
+              type="button"
+              className="button-danger"
+              onClick={handleDelete}
+              disabled={isDeleting}
+            >
+              {isDeleting ? 'Excluindo...' : 'Deletar história'}
+            </button>
+          </div>
 
           <section>
             <h2>Situação</h2>

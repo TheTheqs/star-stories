@@ -8,28 +8,34 @@ export class ApiError extends Error {
   }
 }
 
-async function readResponse(response) {
-  let data
+async function readResponse(response)
+{
+    if (response.status === 204)
+    {
+        return null
+    }
 
-  try {
-    data = await response.json()
-  } catch {
-    throw new ApiError(
-      'O servidor retornou uma resposta inesperada.',
-      response.status,
-    )
-  }
+    let data
 
-  if (!response.ok) {
-    const message =
-      typeof data?.error === 'string'
-        ? data.error
-        : 'Não foi possível concluir a requisição.'
+    try {
+        data = await response.json()
+    } catch {
+        throw new ApiError(
+        'O servidor retornou uma resposta inesperada.',
+        response.status,
+        )
+    }
 
-    throw new ApiError(message, response.status)
-  }
+    if (!response.ok) {
+        const message =
+        typeof data?.error === 'string'
+            ? data.error
+            : 'Não foi possível concluir a requisição.'
 
-  return data
+        throw new ApiError(message, response.status)
+    }
+
+    return data
 }
 
 export async function createStory(storyData) {
@@ -48,6 +54,34 @@ export async function getStory(id, { signal } = {}) {
   const response = await fetch(
     `${STORIES_URL}/${encodeURIComponent(id)}`,
     { signal },
+  )
+
+  return readResponse(response)
+}
+
+export async function updateStory(id, storyData)
+{
+  const response = await fetch(
+    `${STORIES_URL}/${encodeURIComponent(id)}`,
+    {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(storyData),
+    },
+  )
+
+  return readResponse(response)
+}
+
+export async function deleteStory(id)
+{
+  const response = await fetch(
+    `${STORIES_URL}/${encodeURIComponent(id)}`,
+    {
+      method: 'DELETE',
+    },
   )
 
   return readResponse(response)
