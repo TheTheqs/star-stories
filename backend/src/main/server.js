@@ -1,15 +1,12 @@
 import express from 'express';
+import {createStoryRoutes} from "../presentation/routes/story-routes.js";
+import {storyController} from "./container.js";
 
 const app = express();
 
 app.use(express.json());
 
-app.get("/test", (req, res) => {
-  res.status(200).json({
-    status: "OK",
-    message: "Testing, World!"
-  });
-});
+app.use('/stories', createStoryRoutes(storyController));
 
 const PORT = 3000;
 
