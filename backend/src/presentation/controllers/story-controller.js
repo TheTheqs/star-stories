@@ -1,3 +1,6 @@
+import { ValidationError } from "../../models/validation-error.js";
+import { NotFoundError } from "../../models/not-found-error.js";
+
 export class StoryController
 {
     constructor(createStoryUseCase, getStoryUseCase)

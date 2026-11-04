@@ -1,3 +1,5 @@
+import {Story} from "../../models/story.js";
+
 export class CreateStoryUseCase
 {
     constructor(storyRepository, idGenerator)
