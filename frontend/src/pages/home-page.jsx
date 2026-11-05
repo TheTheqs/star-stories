@@ -30,6 +30,9 @@ export default function HomePage() {
       </p>
 
       <Link to="/stories/new">Criar nova história</Link>
+      <p>
+        <Link to="/search">Buscar histórias por título ou tag</Link>
+      </p>
 
       <h2>Consultar história</h2>
 

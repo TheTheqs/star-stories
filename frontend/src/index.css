@@ -110,3 +110,52 @@ code {
 .button-danger {
   background: #b42318;
 }
+
+.search-results {
+  margin-block: 2rem;
+}
+
+.story-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.story-grid > li {
+  min-width: 0;
+}
+
+.story-card {
+  display: block;
+  height: 100%;
+  padding: 1.25rem;
+  border: 1px solid #d0d5dd;
+  border-radius: 0.5rem;
+  color: inherit;
+  background: white;
+  text-decoration: none;
+  transition: border-color 150ms, box-shadow 150ms;
+}
+
+.story-card:hover {
+  border-color: #175cd3;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 8%);
+}
+
+.story-card h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.15rem;
+  overflow-wrap: anywhere;
+}
+
+.story-card-empty {
+  margin: 0;
+  color: #475467;
+}
+
+.story-card .story-tags {
+  margin-bottom: 0;
+}

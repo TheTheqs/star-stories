@@ -75,6 +75,18 @@ export async function updateStory(id, storyData)
   return readResponse(response)
 }
 
+export async function searchStories(term, { signal } = {})
+{
+  const params = new URLSearchParams({ q: term })
+
+  const response = await fetch(
+    `${STORIES_URL}/search?${params.toString()}`,
+    { signal },
+  )
+
+  return readResponse(response)
+}
+
 export async function deleteStory(id)
 {
   const response = await fetch(

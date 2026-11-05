@@ -3,12 +3,13 @@ import { NotFoundError } from "../../models/not-found-error.js";
 
 export class StoryController
 {
-    constructor(createStoryUseCase, getStoryUseCase, updateStoryUseCase, deleteStoryUseCase)
+    constructor(createStoryUseCase, getStoryUseCase, updateStoryUseCase, deleteStoryUseCase, searchStoriesUseCase)
     {
         this.createStoryUseCase = createStoryUseCase;
         this.getStoryUseCase = getStoryUseCase;
         this.updateStoryUseCase = updateStoryUseCase;
         this.deleteStoryUseCase = deleteStoryUseCase;
+        this.searchStoriesUseCase = searchStoriesUseCase;
     }
 
     async createStory(req, res)
@@ -62,6 +63,18 @@ export class StoryController
             )
 
             return res.status(200).json(story)
+        } catch (error) {
+            return this.handleError(error, res)
+        }
+    }
+
+    async searchStories(req, res)
+    {
+        try
+        {
+            const stories = await this.searchStoriesUseCase.execute(req.query.q)
+
+            return res.status(200).json(stories)
         } catch (error) {
             return this.handleError(error, res)
         }
